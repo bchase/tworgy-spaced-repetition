@@ -45,6 +45,8 @@ describe SuperMemo::SM2 do
 
       @card.extend SuperMemo::SM2
       @card.reset_spaced_repetition_data
+      
+      Time.stub!(:now).and_return(Time.mktime(2010,1,1))
     end
     
     it 'should raise an exception if class extended is missing fields' do
@@ -60,13 +62,13 @@ describe SuperMemo::SM2 do
       @card.last_studied.should == nil
     end
     
-    it 'should schedule next repetition for tomorrow if repetition_interval = 0 and quality_of_last_recall = 4' do
+    it 'should schedule next repetition for tomorrow if repetition_interval = 0 and quality_of_last_recall = 4' do      
       @card.process_recall_result(4)
       
       @card.number_repetitions.should == 1
       @card.repetition_interval.should == 1
-      @card.last_studied.should == Date.today
-      @card.next_repetition.should == (Date.today + 1)
+      @card.last_studied.should == Time.now
+      @card.next_repetition.should == (Time.now + 1.day)
       @card.easiness_factor.should be_within(2.5).of(0.01)
     end
 
@@ -76,16 +78,16 @@ describe SuperMemo::SM2 do
       
       @card.number_repetitions.should == 2
       @card.repetition_interval.should == 6
-      @card.last_studied.should == Date.today
-      @card.next_repetition.should == (Date.today + 6)
+      @card.last_studied.should == Time.now
+      @card.next_repetition.should == (Time.now + 6.days)
       @card.easiness_factor.should be_within(2.5).of(0.01)
     end
     
     it 'should report as scheduled to recall (for today)' do
-      @card.next_repetition = Date.today
+      @card.next_repetition = Time.now
       @card.scheduled_to_recall?.should == true
 
-      @card.next_repetition = Date.today - 1
+      @card.next_repetition = Time.now - 1.day
       @card.scheduled_to_recall?.should == true
     end
     
@@ -93,22 +95,22 @@ describe SuperMemo::SM2 do
       @card.next_repetition = nil
       @card.scheduled_to_recall?.should == false
 
-      @card.next_repetition = Date.today + 1
+      @card.next_repetition = Time.now + 1.day
       @card.scheduled_to_recall?.should == false
 
-      @card.next_repetition = Date.today + 99
+      @card.next_repetition = Time.now + 99.day
       @card.scheduled_to_recall?.should == false
     end
     
     it 'should require repeating items that scored 3' do
       @card.process_recall_result(3)
-      @card.next_repetition.should == Date.today
+      @card.next_repetition.should == Time.now
 
       @card.process_recall_result(3)
-      @card.next_repetition.should == Date.today
+      @card.next_repetition.should == Time.now
 
       @card.process_recall_result(4)
-      @card.next_repetition.should == Date.today + 1
+      @card.next_repetition.should == Time.now + 1.day
     end
     
   end

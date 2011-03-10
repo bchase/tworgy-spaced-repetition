@@ -1,5 +1,4 @@
-module SuperMemo
-
+module SuperMemo  
   # This module can be used as a mixin to add the algorithms as used by 
   # SuperMemo 2 (typically referred to as SM2).  
   # 
@@ -11,16 +10,16 @@ module SuperMemo
     end
   
     def reset_spaced_repetition_data
-      self.easiness_factor = 2.5  
-      self.number_repetitions = 0  
-      self.quality_of_last_recall = nil  
+      self.easiness_factor = 2.5
+      self.number_repetitions = 0
+      self.quality_of_last_recall = nil
       self.repetition_interval = nil
       self.next_repetition = nil
       self.last_studied = nil
     end
 
     def process_recall_result(quality_of_recall)
-      raise "Quality of recall must be greater than zero" if quality_of_recall <= 0
+      raise "Quality of recall must be greater than zero" if quality_of_recall < 0
       raise "Quality of recall must be less than 5" if quality_of_recall > 5
       raise "Easiness Factor is not set" unless easiness_factor
       raise "Number of Repetitions is not set" unless number_repetitions
@@ -46,13 +45,13 @@ module SuperMemo
           end
         end
       end
-      
-      self.next_repetition = Date.today + repetition_interval
-      self.last_studied = Date.today
+      self.quality_of_last_recall = quality_of_recall
+      self.next_repetition = Time.now + repetition_interval.days
+      self.last_studied = Time.now
     end
 
     def scheduled_to_recall?
-      !next_repetition.nil? && next_repetition <= Date.today
+      !next_repetition.nil? && next_repetition <= Time.now
     end
 
     def check_spaced_repetition_methods
