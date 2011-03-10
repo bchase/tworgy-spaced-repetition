@@ -1,13 +1,14 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'rubygems'
-require 'tworgy-ruby'
+require 'rspec'
 require 'tworgy-spaced-repetition'
-require 'tworgy-spaced-repetition-testing'
-require 'spec'
-require 'spec/autorun'
+require 'ostruct'
 
-Spec::Runner.configure do |config|
+# Requires supporting files with custom matchers and macros, etc,
+# in ./support/ and its subdirectories.
+Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+
+RSpec.configure do |config|
   
 end

@@ -15,7 +15,7 @@ describe SuperMemo::SM2 do
       t.check_spaced_repetition_methods
     end
 
-    it 'should raise DBC exception if class including is missing fields' do
+    it 'should raise an exception if class including is missing fields' do
       class Temp2 
         include SuperMemo::SM2
       end
@@ -23,7 +23,7 @@ describe SuperMemo::SM2 do
 
       lambda {
         t.check_spaced_repetition_methods
-      }.should raise_error(DBC::AssertconditionException)
+      }.should raise_error
     end
 
   end
@@ -31,7 +31,8 @@ describe SuperMemo::SM2 do
   describe 'exclude mixin' do
     
     before :each do
-      @card = {
+      @card = OpenStruct.new(
+      {
         :easiness_factor => nil, 
         :number_repetitions => nil, 
         :quality_of_last_recall => nil,
@@ -40,14 +41,14 @@ describe SuperMemo::SM2 do
         :last_studied => nil,
         :question => "Who is the most awesome of them all?",
         :answer => 'Me!'
-      }.ostructify
+      })
 
       @card.extend SuperMemo::SM2
       @card.reset_spaced_repetition_data
     end
     
-    it 'should raise DBC exception if class extended is missing fields' do
-      lambda { nil.extend SuperMemo::SM2 }.should raise_error(DBC::AssertconditionException)
+    it 'should raise an exception if class extended is missing fields' do
+      lambda { nil.extend SuperMemo::SM2 }.should raise_error
     end
     
     it 'should initialize values' do
@@ -66,7 +67,7 @@ describe SuperMemo::SM2 do
       @card.repetition_interval.should == 1
       @card.last_studied.should == Date.today
       @card.next_repetition.should == (Date.today + 1)
-      @card.easiness_factor.should be_close(2.5, 0.01)
+      @card.easiness_factor.should be_within(2.5).of(0.01)
     end
 
     it 'should schedule next repetition for 6 days if repetition_interval = 1 and quality_of_last_recall = 4' do
@@ -77,7 +78,7 @@ describe SuperMemo::SM2 do
       @card.repetition_interval.should == 6
       @card.last_studied.should == Date.today
       @card.next_repetition.should == (Date.today + 6)
-      @card.easiness_factor.should be_close(2.5, 0.01)
+      @card.easiness_factor.should be_within(2.5).of(0.01)
     end
     
     it 'should report as scheduled to recall (for today)' do

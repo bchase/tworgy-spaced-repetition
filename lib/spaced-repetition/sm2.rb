@@ -20,10 +20,10 @@ module SuperMemo
     end
 
     def process_recall_result(quality_of_recall)
-      DBC.require(quality_of_recall >= 0)
-      DBC.require(quality_of_recall <= 5)
-      DBC.require(easiness_factor)
-      DBC.require(number_repetitions)
+      raise "Quality of recall must be greater than zero" if quality_of_recall <= 0
+      raise "Quality of recall must be less than 5" if quality_of_recall > 5
+      raise "Easiness Factor is not set" unless easiness_factor
+      raise "Number of Repetitions is not set" unless number_repetitions
       
       if quality_of_recall < 3    
         self.number_repetitions = 0 
@@ -64,7 +64,7 @@ module SuperMemo
         send(:repetition_interval)
         send(:last_studied)
       rescue NoMethodError => e
-        DBC.assert(false, e.message)
+        raise "You did not set a required attr_accessor: " + e.message
       end
     end
     
