@@ -19,10 +19,10 @@ module SuperMemo
     end
 
     def process_recall_result(quality_of_recall)
-      raise "Quality of recall must be greater than zero" if quality_of_recall < 0
-      raise "Quality of recall must be less than 5" if quality_of_recall > 5
-      raise "Easiness Factor is not set" unless easiness_factor
-      raise "Number of Repetitions is not set" unless number_repetitions
+      raise "Quality of recall must be greater than zero" if self.quality_of_recall < 0
+      raise "Quality of recall must be less than 5" if self.quality_of_recall > 5
+      raise "Easiness Factor is not set" unless self.easiness_factor
+      raise "Number of Repetitions is not set" unless self.number_repetitions
       
       if quality_of_recall < 3    
         self.number_repetitions = 0 
