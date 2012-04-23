@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "lib/spaced-repetition/sm2.rb",
-     "lib/tworgy-spaced-repetition-testing.rb",
+     # "lib/tworgy-spaced-repetition-testing.rb",
      "lib/tworgy-spaced-repetition.rb",
      "spec/lib/spaced-repetition/sm2_spec.rb",
      "spec/lib/spaced-repetition/testing_spec.rb",
